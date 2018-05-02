@@ -73,7 +73,7 @@ module R509
             # We're only going to handle DistributionPointName [0] for now
             # so grab entries[0] and then get the fullName with value[0]
             # and the value of that ASN1Data with value[0] again
-            @general_names.add_item(distribution_point.entries[0].value[0].value[0])
+            @general_names.add_item(distribution_point.value[0].value[0].value[0])
           end
         end
 

@@ -18,3 +18,6 @@ group :documentation do
   gem "redcarpet", "~>2.2.2"
   gem "github-markup", ">=0.7.5"
 end
+
+gem 'pry'
+gem 'pry-nav'

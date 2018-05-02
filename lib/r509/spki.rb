@@ -48,7 +48,7 @@ module R509
     # @return [String] signature algorithm string
     def signature_algorithm
       data = OpenSSL::ASN1.decode(self.to_der)
-      data.entries[1].value.entries[0].value
+      data.value[1].value.entries[0].value
     end
 
     private

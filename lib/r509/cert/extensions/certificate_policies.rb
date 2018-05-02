@@ -1,4 +1,5 @@
 require 'r509/cert/extensions/base'
+require 'pry'
 
 module R509
   class Cert
@@ -130,12 +131,12 @@ module R509
         attr_reader :policy_identifier, :policy_qualifiers
         def initialize(data)
           # store the policy identifier OID
-          @policy_identifier = data.entries[0].value
+          @policy_identifier = data.value[0].value
 
           # iterate the policy qualifiers if any exist
-          return if data.entries[1].nil?
+          return if data.value[1].nil?
           @policy_qualifiers = PolicyQualifiers.new
-          data.entries[1].each do |pq|
+          data.value[1].value.each do |pq|
             @policy_qualifiers.parse(pq)
           end
         end
@@ -167,13 +168,13 @@ module R509
 
         # parse each PolicyQualifier and store the results into the object array
         def parse(data)
-          oid = data.entries[0].value
+          oid = data.value[0].value
           case
           when oid == 'id-qt-cps'
             # by RFC definition must be URIs
-            @cps_uris << data.entries[1].value
+            @cps_uris << data.value[1].value
           when oid == 'id-qt-unotice'
-            @user_notices <<  UserNotice.new(data.entries[1])
+            @user_notices <<  UserNotice.new(data.value[1])
           end
         end
 
@@ -198,7 +199,7 @@ module R509
       class UserNotice
         attr_reader :notice_reference, :explicit_text
         def initialize(data)
-          data.each do |qualifier|
+          data.value.each do |qualifier|
             # if we find another sequence, that's a noticeReference, otherwise it's explicitText
             if qualifier.is_a?(OpenSSL::ASN1::Sequence)
               @notice_reference = NoticeReference.new(qualifier)
@@ -230,12 +231,12 @@ module R509
       class NoticeReference
         attr_reader :organization, :notice_numbers
         def initialize(data)
-          data.each do |notice_reference|
+          data.value.each do |notice_reference|
             # if it's displaytext then it's the organization
             # if it's YET ANOTHER ASN1::Sequence, then it's noticeNumbers
             if notice_reference.is_a?(OpenSSL::ASN1::Sequence)
               @notice_numbers = []
-              notice_reference.each do |ints|
+              notice_reference.value.each do |ints|
                 @notice_numbers << ints.value.to_i
               end
             else

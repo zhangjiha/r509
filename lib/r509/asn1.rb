@@ -17,7 +17,7 @@ module R509
       #                    -- corresponding to the extension type identified
       #                    -- by extnID
       #        }
-      OpenSSL::ASN1.decode(asn.entries.last.value).value
+      OpenSSL::ASN1.decode(asn.value.last.value).value
     end
 
     # @param [Array,R509::ASN1::GeneralNames] names An array of strings. Can be dNSName, iPAddress, URI, or rfc822Name.

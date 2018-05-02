@@ -101,11 +101,11 @@ module R509
             #   AccessDescription  ::=  SEQUENCE {
             #           accessMethod          OBJECT IDENTIFIER,
             #           accessLocation        GeneralName  }
-            case access_description.entries[0].value
+            case access_description.value[0].value
             when "OCSP"
-              @ocsp.add_item(access_description.entries[1])
+              @ocsp.add_item(access_description.value[1])
             when "caIssuers"
-              @ca_issuers.add_item(access_description.entries[1])
+              @ca_issuers.add_item(access_description.value[1])
             end
           end
         end
